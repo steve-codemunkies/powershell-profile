@@ -1,4 +1,4 @@
-﻿. "C:\Users\Steven Hocking\AppData\Local\GitHub\shell.ps1"
+﻿#. "C:\Users\Steven Hocking\AppData\Local\GitHub\shell.ps1"
 . "C:\Users\Steven Hocking\Documents\WindowsPowerShell\profile.ps1"
 Import-Module Posh-Git
 Import-Module Posh-Hg
