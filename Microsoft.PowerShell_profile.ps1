@@ -1,51 +1,19 @@
-﻿#. "C:\Users\Steven Hocking\AppData\Local\GitHub\shell.ps1"
-. "C:\Users\Steven Hocking\Documents\WindowsPowerShell\profile.ps1"
-Import-Module Posh-Git
-Import-Module Posh-Hg
 
-function isCurrentDirectoryARepository($type) {
+# Load posh-git example profile
+. 'C:\Users\Steven\Documents\WindowsPowerShell\profile.ps1'
+. 'C:\tools\poshgit\dahlbyk-posh-git-9d95ed5\profile.example.ps1'
 
-    if ((Test-Path $type) -eq $TRUE) {
-        return $TRUE
-    }
-
-    # Test within parent dirs
-    $checkIn = (Get-Item .).parent
-    while ($checkIn -ne $NULL) {
-        $pathToTest = $checkIn.fullname + '/' + $type;
-        if ((Test-Path $pathToTest) -eq $TRUE) {
-            return $TRUE
-        } else {
-            $checkIn = $checkIn.parent
+Rename-Item Function:\Prompt PoshGitPrompt -Force
+function Prompt() {
+    if(Test-Path Function:\PrePoshGitPrompt) {
+        ++$global:poshScope; 
+        New-Item function:\script:Write-host -value "param([object] `$object, `$backgroundColor, `$foregroundColor, [switch] `$nonewline) " -Force | Out-Null;
+        $private:p = PrePoshGitPrompt;
+        
+        if(--$global:poshScope -eq 0) {
+            Remove-Item function:\Write-Host -Force
         }
     }
-    return $FALSE
+    
+    PoshGitPrompt
 }
-
-# Posh-Hg and Posh-git prompt
-
-#. $ProfileRoot\Modules\posh-hg\profile.example.ps1
-#. $ProfileRoot\Modules\posh-git\profile.example.ps1
-
-function prompt(){
-    # Reset color, which can be messed up by Enable-GitColors
-    $Host.UI.RawUI.ForegroundColor = $GitPromptSettings.DefaultForegroundColor
-
-    Write-Host $pwd -nonewline
-
-    if (isCurrentDirectoryARepository(".git")) {
-        # Git Prompt
-        $Global:GitStatus = Get-GitStatus
-        Write-GitStatus $GitStatus
-    } elseif (isCurrentDirectoryARepository(".hg")) {
-        # Mercurial Prompt
-        $Global:HgStatus = Get-HgStatus
-        Write-HgStatus $HgStatus
-    }
-
-    return "> "
-}
-
-Enable-GitColors
-
-Start-SshAgent -Quiet
