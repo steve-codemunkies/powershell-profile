@@ -17,3 +17,7 @@ function Prompt() {
     
     PoshGitPrompt
 }
+
+# Load Jump-Location profile
+Import-Module 'C:\Users\Steven\Documents\WindowsPowerShell\Modules\Jump.Location\Jump.Location.psd1'
+
