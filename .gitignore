@@ -165,3 +165,4 @@ pip-log.txt
 Modules/Jump.Location
 Modules/PSReadLine
 Modules/PsGet
+Modules/posh-git
